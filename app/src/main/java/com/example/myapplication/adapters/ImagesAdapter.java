@@ -1,6 +1,7 @@
 package com.example.myapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activities.ImagesZoomInActivity;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImagesView
 
         Uri uris = imageUris.get(position);
         holder.imageView.setImageURI(uris);
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.imageView.getContext(), ImagesZoomInActivity.class);
+                intent.putExtra("imageuri",uris.toString());
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
 
     }
 

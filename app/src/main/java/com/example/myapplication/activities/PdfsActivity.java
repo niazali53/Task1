@@ -44,6 +44,8 @@ public class PdfsActivity extends AppCompatActivity {
 
     ArrayList<String> listofdata;
 
+    final String fileformat = ".pdf";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,8 @@ public class PdfsActivity extends AppCompatActivity {
         File[] files = directory.listFiles();
 
         if (files!=null) {
+
+            //Toast.makeText(this, "files are not empty", Toast.LENGTH_SHORT).show();
             for (File file:files){
                 if (file.isFile() && file.getName().endsWith(".pdf")){
                     Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
