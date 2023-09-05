@@ -1,50 +1,25 @@
 package com.example.myapplication.activities;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.Toast;
-import android.os.Build;
-import android.provider.MediaStore;
-
+import android.media.audiofx.Equalizer;
 import com.example.myapplication.R;
-import com.example.myapplication.adapters.ImagesAdapter;
 import com.example.myapplication.adapters.PdfsAdapter;
-import com.example.myapplication.models.PDFFile;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PdfsActivity extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSION = 101;
     private RecyclerView recyclerView;
-    private PdfsAdapter pdfAdapter;
-    private List<PDFFile> pdfFiles;
-    ArrayList<String> pdfList;
-
-    ArrayList<String> listofdata;
-
-    final String fileformat = ".pdf";
+    ArrayList<File> pdfFiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,33 +28,42 @@ public class PdfsActivity extends AppCompatActivity {
         initialization();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (checkPermission()) {
+        retrievePDFs();
+        PdfsAdapter pdfAdapter = new PdfsAdapter(this, pdfFiles);
+        recyclerView.setAdapter(pdfAdapter);
 
-            PdfsAdapter pdfAdapter = new PdfsAdapter(this,getPDFFiles());
-            recyclerView.setAdapter(pdfAdapter);
 
-        } else {
-            requestPermission();
+
+
+    }
+
+    private void retrievePDFs() {
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        findPDFs(root);
+    }
+
+    private void findPDFs(File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    findPDFs(file);
+                } else if (file.isFile() && file.getPath().endsWith(".pdf")) {
+                    pdfFiles.add(file);
+                }
+            }
         }
 
     }
 
-
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-    }
-
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               // getPdfList(); // Fetch images when permission is granted
+                retrievePDFs(); // Fetch images when permission is granted
                 // Fetch videos when permission is granted
             } else {
                 Toast.makeText(this, "Permission denied. Cannot fetch media.", Toast.LENGTH_SHORT).show();
@@ -88,33 +72,8 @@ public class PdfsActivity extends AppCompatActivity {
 
     }
 
-
-    private List<PDFFile> getPDFFiles() {
-        List<PDFFile> pdfFiles = new ArrayList<>();
-        String directoryPath = Environment.getExternalStorageDirectory().toString();
-
-        File directory = new File(directoryPath);
-        File[] files = directory.listFiles();
-
-        if (files!=null) {
-
-            //Toast.makeText(this, "files are not empty", Toast.LENGTH_SHORT).show();
-            for (File file:files){
-                if (file.isFile() && file.getName().endsWith(".pdf")){
-                    Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }
-
-        return pdfFiles;
-    }
-
-
     private void initialization() {
         recyclerView = findViewById(R.id.pdfs_RecyclerView);
-        //pdfAdapter = new PdfsAdapter(this,pdfFiles);
-        recyclerView.setAdapter(pdfAdapter);
-        pdfFiles = new ArrayList<PDFFile>();
+        pdfFiles = new ArrayList<>();
     }
 }

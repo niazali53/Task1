@@ -38,14 +38,10 @@ public class AudiosActivity extends AppCompatActivity {
 
         audio_RecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if (checkPermission()) {
-            fetchAudioFiles();
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(audio_RecyclerView.getContext(), 1);
-            audio_RecyclerView.addItemDecoration(dividerItemDecoration);
-            audio_RecyclerView.setAdapter(new AudiosAdapter(audioFiles));
-        } else {
-            requestPermission();
-        }
+        fetchAudioFiles();
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(audio_RecyclerView.getContext(), 1);
+        audio_RecyclerView.addItemDecoration(dividerItemDecoration);
+        audio_RecyclerView.setAdapter(new AudiosAdapter(audioFiles));
 
     }
 
@@ -54,14 +50,6 @@ public class AudiosActivity extends AppCompatActivity {
         audioFiles = new ArrayList<>();
     }
 
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -103,4 +91,6 @@ public class AudiosActivity extends AppCompatActivity {
             }
 
 
-}}}
+        }
+    }
+}

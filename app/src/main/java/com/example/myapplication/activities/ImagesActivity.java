@@ -37,29 +37,17 @@ public class ImagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_images);
 
         initialization();
-        images_RecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        images_RecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        if (checkPermission()) {
-            fetchImages();
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(images_RecyclerView.getContext(),1);
-            images_RecyclerView.addItemDecoration(dividerItemDecoration);
-            images_RecyclerView.setAdapter(new ImagesAdapter(this,imageUris));
-
-        } else {
-            requestPermission();
-        }
+        fetchImages();
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(images_RecyclerView.getContext(), 1);
+        images_RecyclerView.addItemDecoration(dividerItemDecoration);
+        images_RecyclerView.setAdapter(new ImagesAdapter(this, imageUris));
 
 
     }
 
 
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -77,7 +65,6 @@ public class ImagesActivity extends AppCompatActivity {
     }
 
 
-
     private void fetchImages() {
         imageUris.clear();
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -89,7 +76,7 @@ public class ImagesActivity extends AppCompatActivity {
                 imageUris.add(Uri.parse("file://" + imagePath));
             }
             cursor.close();
-           // imagesAdapter.notifyDataSetChanged();
+            // imagesAdapter.notifyDataSetChanged();
         }
 
     }

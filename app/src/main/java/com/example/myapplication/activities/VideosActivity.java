@@ -35,28 +35,16 @@ public class VideosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_videos);
         initialization();
 
-        videos_RecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        videos_RecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        if (checkPermission()) {
-            fetchVideos();
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(videos_RecyclerView.getContext(),1);
-            videos_RecyclerView.addItemDecoration(dividerItemDecoration);
-            videos_RecyclerView.setAdapter(new VideosAdapter(getApplicationContext(),videosUris));
-
-        } else {
-            requestPermission();
-        }
+        fetchVideos();
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(videos_RecyclerView.getContext(), 1);
+        videos_RecyclerView.addItemDecoration(dividerItemDecoration);
+        videos_RecyclerView.setAdapter(new VideosAdapter(getApplicationContext(), videosUris));
 
 
     }
 
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.models.PDFFile;
 
+import java.io.File;
 import java.util.List;
 
 public class PdfsAdapter extends RecyclerView.Adapter<PdfsAdapter.PdfsAdapterViewHolder> {
 
-    private List<PDFFile> pdfList;
+    private List<File> pdfList;
     private Context context;
-    public PdfsAdapter(Context context,List<PDFFile> pdfList) {
+    public PdfsAdapter(Context context,List<File> pdfList) {
         this.context = context;
         this.pdfList = pdfList;
     }
@@ -35,7 +36,7 @@ public class PdfsAdapter extends RecyclerView.Adapter<PdfsAdapter.PdfsAdapterVie
     @Override
     public void onBindViewHolder(@NonNull PdfsAdapterViewHolder holder, int position) {
 
-        PDFFile pdfFile = pdfList.get(position);
+        File pdfFile = pdfList.get(position);
         holder.pdfs.setText(pdfFile.getName());
     }
 
